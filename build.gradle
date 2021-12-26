@@ -1,0 +1,38 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:7.0.3"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:1.4.1"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.1.1"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+subprojects {
+    apply plugin: "io.gitlab.arturbosch.detekt"
+    detekt {
+        toolVersion = '1.1.1'
+        input = files("${rootDir}")
+        config = files("${rootDir}/detekt.yml")
+        filters = ".*/resources/.*,.*/build/.*"
+        reports {
+            xml.enabled = false
+            html {
+                enabled = true
+                destination = file("${rootDir}/build/reports/detekt.html")
+            }
+        }
+    }
+}
